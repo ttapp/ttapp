@@ -26,23 +26,26 @@ class TeardownController extends Controller
 		foreach ( $reservations as $reservation)
 			foreach ( $reservation['Instances'] as $instance )
 				array_push( $inst_list, $instance['InstanceId']);
-
-	$term_resp = $Ec2Client->terminateInstances(array(
-		'DryRun' => true,
-		'InstanceIds' => $inst_list,
-		'Force' => true ) );
-
-		return new Response( 'Terminating the following instances:'.
-					'<pre>'.
-					print_r($inst_list, true).
-					'</pre>'.
-					'Got the following respose:'.
-					'<pre>'.
-					print_r($term_resp, true).
-					'</pre>'.
-					'<hr />'.
-					'Note: The terminate call is set in dry-run mode,'.
-					'Comment it from the code to actually terminate all instances'
-				);
+	try {
+		$Ec2Client->terminateInstances(array(
+			'DryRun' => true,
+			'InstanceIds' => $inst_list,
+			'Force' => true ) );
+	}
+	catch (Exception $e) {
+		return new Response( print_r($e->getMessage(), true) );
+	}
+	return new Response( 'Terminating the following instances:'.
+				'<pre>'.
+				print_r($inst_list, true).
+				'</pre>'.
+				'Got the following respose:'.
+				'<pre>'.
+				print_r($term_resp, true).
+				'</pre>'.
+				'<hr />'.
+				'Note: The terminate call is set in dry-run mode,'.
+				'Comment it from the code to actually terminate all instances'
+			);
     }
 }
