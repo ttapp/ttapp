@@ -28,7 +28,7 @@ class SetupController extends Controller {
 			'revision' => [
 				'revisionType' => 'GitHub',
 				'gitHubLocation' => [
-					'repository' => 'kxr/ttapp',
+					'repository' => 'ttapp/ttapp',
 					'commitId' => "$head_commit_id"
 				]
 			]
