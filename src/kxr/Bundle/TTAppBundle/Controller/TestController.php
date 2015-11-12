@@ -47,11 +47,12 @@ class TestController extends Controller
 	$conn = $this->get('doctrine.dbal.'.$shard.'_connection');
 
 	// Insert data into database
-	$statement = $conn->prepare("INSERT INTO users (fname, lname, age) VALUES (:fname, :lname, :age)");
-	$statement->bindValue(':fname', $first_name); 
-	$statement->bindValue(':lname', $last_name); 
-	$statement->bindValue(':age', $age); 
-	$statement->execute();
+	// $statement = $conn->prepare("INSERT INTO users (fname, lname, age) VALUES (:fname, :lname, :age)");
+	// $statement->bindValue(':fname', $first_name); 
+	// $statement->bindValue(':lname', $last_name); 
+	// $statement->bindValue(':age', $age); 
+	//$statement->execute();
+	$conn->executeQuery("INSERT INTO users (fname, lname, age) VALUES ('$first_name', '$last_name', $age)");
 
         return new Response( '<b>First Name:</b> ' . $first_name . '<br><b>Last Name:</b> ' . $last_name . '<br><b>Age:</b> ' . $age . '<br> Database: ' . $shard );
     }
