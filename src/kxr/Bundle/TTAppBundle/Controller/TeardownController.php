@@ -35,7 +35,7 @@ class TeardownController extends Controller
 			'Force' => true ) );
 	}
 	catch (Ec2Exception $e) {
-		return new Response( "<pre>".print_r($e->getMessage(), true).</pre> );
+		return new Response( "<pre>".print_r($e->getMessage(), true)."</pre>" );
 	}
 	return new Response( 'Terminating the following instances:'.
 				'<pre>'.
