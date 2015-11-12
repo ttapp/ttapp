@@ -5,6 +5,8 @@ namespace kxr\Bundle\TTAppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Aws\Ec2\Ec2Client;
+use Aws\Ec2\Exception\Ec2Exception;
+
 
 class TeardownController extends Controller
 {
@@ -27,13 +29,13 @@ class TeardownController extends Controller
 			foreach ( $reservation['Instances'] as $instance )
 				array_push( $inst_list, $instance['InstanceId']);
 	try {
-		$Ec2Client->terminateInstances(array(
+		$term_resp = $Ec2Client->terminateInstances(array(
 			'DryRun' => true,
 			'InstanceIds' => $inst_list,
 			'Force' => true ) );
 	}
-	catch (Exception $e) {
-		return new Response( print_r($e->getMessage(), true) );
+	catch (Ec2Exception $e) {
+		return new Response( "<pre>".print_r($e->getMessage(), true).</pre> );
 	}
 	return new Response( 'Terminating the following instances:'.
 				'<pre>'.
@@ -43,9 +45,7 @@ class TeardownController extends Controller
 				'<pre>'.
 				print_r($term_resp, true).
 				'</pre>'.
-				'<hr />'.
-				'Note: The terminate call is set in dry-run mode,'.
-				'Comment it from the code to actually terminate all instances'
+				'<hr />'
 			);
     }
 }
