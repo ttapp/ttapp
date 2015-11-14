@@ -58,11 +58,19 @@ class TakedownController extends Controller
 	foreach ( $nodes as $node ){
 		$status[$node] = [];
 		// Get node IP
-		$ip = $Ec2Client->DescribeInstances( array(
-			'Filters' => array( array(
-					'Name' => 'tag:Name',
-					'Values' => array($node) ) ) ) )
+                $ip = $Ec2Client->DescribeInstances( array(
+                        'Filters' => array(     array(
+                                                        'Name' => 'tag:Name',
+                                                        'Values' => [$node]
+                                                ),
+                                                array(
+                                                        'Name' => 'instance-state-name',
+                                                        'Values' => ['running']
+                                                )
+                                        )
+                                ) )
 			['Reservations']['0']['Instances']['0']['PrivateIpAddress'];
+		$status[$node]['ip'] = $ip;
 		// Iterate through each db
 		foreach ( $dbs as $db => $dbport ) {
 			$status[$node][$db] = '';
